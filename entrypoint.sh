@@ -3,7 +3,17 @@ set -exu
 
 mkdir /db
 
-GENESIS_L1_PATH="genesis.json"
+# Install geth at container runtime for faster iteration.
+
+git clone https://github.com/shaspitz/go-ethereum.git /go-ethereum
+cd /go-ethereum
+# commit: lets try hardcoding delay 
+git checkout 9bb1a7f0034002e79c4a91406ea3828ad3e4627f
+make geth
+cp /go-ethereum/build/bin/geth /usr/local/bin/
+cd /
+
+GENESIS_L1_PATH="/genesis.json"
 
 VERBOSITY=5
 GETH_DATA_DIR=/db
