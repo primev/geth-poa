@@ -12,11 +12,14 @@ RUN make all
 
 FROM alpine:latest
 
+RUN apk add --no-cache jq
+
 COPY --from=builder /go-ethereum/build/bin/geth /usr/local/bin/
 COPY --from=builder /go-ethereum/build/bin/bootnode /usr/local/bin/
 
-COPY ./entrypoint.sh /entrypoint.sh
+COPY genesis.json /genesis.json
 
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"] 

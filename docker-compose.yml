@@ -1,13 +1,6 @@
-
 version: '3'
-
 services:
-  geth:
+
+  l1-geth:
     build: 
       context: .
-      dockerfile: Dockerfile
-    volumes:
-      - data:/data
-
-volumes:
-  data:
