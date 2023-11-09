@@ -3,35 +3,24 @@ set -exu
 
 mkdir /db
 
-# Install geth at container runtime for faster iteration.
-
-git clone https://github.com/shaspitz/go-ethereum.git /go-ethereum
-cd /go-ethereum
-# commit: lets try hardcoding delay 
-git checkout 9bb1a7f0034002e79c4a91406ea3828ad3e4627f
-make geth
-cp /go-ethereum/build/bin/geth /usr/local/bin/
-cd /
-
 GENESIS_L1_PATH="/genesis.json"
-
 VERBOSITY=5
 GETH_DATA_DIR=/db
 GETH_CHAINDATA_DIR="$GETH_DATA_DIR/geth/chaindata"
 GETH_KEYSTORE_DIR="$GETH_DATA_DIR/keystore"
 CHAIN_ID=$(cat "$GENESIS_L1_PATH" | jq -r .config.chainId)
-BLOCK_SIGNER_PRIVATE_KEY="ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-BLOCK_SIGNER_ADDRESS="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 RPC_PORT="${RPC_PORT:-8545}"
 WS_PORT="${WS_PORT:-8546}"
 
-echo '688f5d737bad920bdfb2fc2f488d6b6209eebda1dae949a8de91398d932c517a' > /jwt-secret.txt
+# Generate signer key if needed
+if [ ! -d "$GETH_KEYSTORE_DIR" ] && [ "$GETH_NODE_TYPE" = "signer" ]; then
 
-if [ ! -d "$GETH_KEYSTORE_DIR" ]; then
 	echo "$GETH_KEYSTORE_DIR missing, running account import"
 	echo -n "pwd" > "$GETH_DATA_DIR"/password
 	echo -n "$BLOCK_SIGNER_PRIVATE_KEY" | sed 's/0x//' > "$GETH_DATA_DIR"/block-signer-key
-	geth account import \
+	geth --verbosity="$VERBOSITY" \
+		--nousb \
+		account import \
 		--datadir="$GETH_DATA_DIR" \
 		--password="$GETH_DATA_DIR"/password \
 		"$GETH_DATA_DIR"/block-signer-key
@@ -39,49 +28,93 @@ else
 	echo "$GETH_KEYSTORE_DIR exists."
 fi
 
+# Init geth if needed
 if [ ! -d "$GETH_CHAINDATA_DIR" ]; then
 	echo "$GETH_CHAINDATA_DIR missing, running init"
 	echo "Initializing genesis."
-	geth --verbosity="$VERBOSITY" init \
-		--datadir="$GETH_DATA_DIR" \
+	geth --verbosity="$VERBOSITY" \
+		--nousb \
+		--datadir="$GETH_DATA_DIR" init \
 		"$GENESIS_L1_PATH"
 else
 	echo "$GETH_CHAINDATA_DIR exists."
 fi
 
-# Warning: Archive mode is required, otherwise old trie nodes will be
-# pruned within minutes of starting the devnet.
+# Obtain assigned container IP for p2p
+NODE_IP=$(hostname -i)
 
-exec geth \
-	--datadir="$GETH_DATA_DIR" \
-	--verbosity="$VERBOSITY" \
-	--http \
-	--http.corsdomain="*" \
-	--http.vhosts="*" \
-	--http.addr=0.0.0.0 \
-	--http.port="$RPC_PORT" \
-	--http.api=web3,debug,eth,txpool,net,engine \
-	--ws \
-	--ws.addr=0.0.0.0 \
-	--ws.port="$WS_PORT" \
-	--ws.origins="*" \
-	--ws.api=debug,eth,txpool,net,engine \
-	--syncmode=full \
-	--nodiscover \
-	--maxpeers=1 \
-	--networkid=$CHAIN_ID \
-	--unlock=$BLOCK_SIGNER_ADDRESS \
-	--mine \
-	--miner.etherbase=$BLOCK_SIGNER_ADDRESS \
-	--password="$GETH_DATA_DIR"/password \
-	--allow-insecure-unlock \
-	--rpc.allow-unprotected-txs \
-	--authrpc.addr="0.0.0.0" \
-	--authrpc.port="8551" \
-	--authrpc.vhosts="*" \
-	--authrpc.jwtsecret=/jwt-secret.txt \
-	--gcmode=archive \
-	--metrics \
-	--metrics.addr=0.0.0.0 \
-	--metrics.port=6060 \
-	"$@"
+if [ "$GETH_NODE_TYPE" = "bootnode" ]; then
+	echo "Starting bootnode"
+
+	# Generate boot.key
+	echo "$BOOT_KEY" > $GETH_DATA_DIR/boot.key
+
+	# TODO: understand networking 
+
+	exec geth \
+		--datadir="$GETH_DATA_DIR" \
+		--port 30301 \
+		--verbosity="$VERBOSITY" \
+		--http \
+		--http.corsdomain="*" \
+		--http.vhosts="*" \
+		--http.addr=0.0.0.0 \
+		--http.port="$RPC_PORT" \
+		--http.api=web3,debug,eth,txpool,net,engine \
+		--ws \
+		--ws.addr=0.0.0.0 \
+		--ws.port="$WS_PORT" \
+		--ws.origins="*" \
+		--ws.api=debug,eth,txpool,net,engine \
+		--syncmode=full \
+		--networkid=$CHAIN_ID \
+		--nousb \
+		--nodekey $GETH_DATA_DIR/boot.key \
+		--netrestrict 172.13.0.0/24 \
+		--nat extip:$NODE_IP
+
+elif [ "$GETH_NODE_TYPE" = "signer" ]; then
+	echo "Starting signer node"
+
+	# TODO: generate jwt secret each time? or do we even need this
+	echo '688f5d737bad920bdfb2fc2f488d6b6209eebda1dae949a8de91398d932c517a' > /jwt-secret.txt
+
+	# TODO: Look into archive mode and other flags near bottom.
+
+
+	exec geth \
+		--datadir="$GETH_DATA_DIR" \
+		--port 30311 \
+		--verbosity="$VERBOSITY" \
+		--syncmode=full \
+		--http \
+		--http.corsdomain="*" \
+		--http.vhosts="*" \
+		--http.addr=0.0.0.0 \
+		--http.port="$RPC_PORT" \
+		--http.api=web3,debug,eth,txpool,net,engine \
+		--bootnodes enode://34a2a388ad31ca37f127bb9ffe93758ee711c5c2277dff6aff2e359bcf2c9509ea55034196788dbd59ed70861f523c1c03d54f1eabb2b4a5c1c129d966fe1e65@172.13.0.100:30301 \
+		--networkid=$CHAIN_ID \
+		--unlock=$BLOCK_SIGNER_ADDRESS \
+		--password="$GETH_DATA_DIR"/password \
+		--allow-insecure-unlock \
+		--nousb \
+		--netrestrict 172.13.0.0/24 \
+		--ws \
+		--ws.addr=0.0.0.0 \
+		--ws.port="$WS_PORT" \
+		--ws.origins="*" \
+		--ws.api=debug,eth,txpool,net,engine \
+		--rpc.allow-unprotected-txs \
+		--authrpc.addr="0.0.0.0" \
+		--authrpc.port="8551" \
+		--authrpc.vhosts="*" \
+		--authrpc.jwtsecret=/jwt-secret.txt \
+		--gcmode=archive \
+		--metrics \
+		--metrics.addr=0.0.0.0 \
+		--metrics.port=6060 \
+		--nat extip:$NODE_IP
+else
+	echo "Invalid GETH_NODE_TYPE specified"
+fi
