@@ -1,22 +1,19 @@
-# FROM golang:1.21-alpine AS builder
-FROM golang:1.21-alpine 
+FROM golang:1.21-alpine AS builder
 
 RUN apk add --no-cache gcc musl-dev linux-headers git make
 
-# RUN git clone https://github.com/shaspitz/go-ethereum.git /go-ethereum
-# WORKDIR /go-ethereum
-# # commit: logs + handle delay being shorter than period 
-# RUN git checkout 01664986e2fcb9463a7911c8a963005c5da9e43f
+RUN git clone https://github.com/shaspitz/go-ethereum.git /go-ethereum
+WORKDIR /go-ethereum
 
-# # RUN make all
-# RUN make geth
+# commit: lets try hardcoding delay 
+RUN git checkout 9bb1a7f0034002e79c4a91406ea3828ad3e4627f
+RUN make geth
 
-# FROM alpine:latest
+FROM alpine:latest
 
 RUN apk add --no-cache jq
 
-# COPY --from=builder /go-ethereum/build/bin/geth /usr/local/bin/
-# COPY --from=builder /go-ethereum/build/bin/bootnode /usr/local/bin/
+COPY --from=builder /go-ethereum/build/bin/geth /usr/local/bin/
 
 COPY genesis.json /genesis.json
 
