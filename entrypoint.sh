@@ -74,16 +74,12 @@ if [ "$GETH_NODE_TYPE" = "bootnode" ]; then
 elif [ "$GETH_NODE_TYPE" = "signer" ]; then
 	echo "Starting signer node"
 
-	# TODO: generate jwt secret each time? or do we even need this
-	echo '688f5d737bad920bdfb2fc2f488d6b6209eebda1dae949a8de91398d932c517a' > /jwt-secret.txt
-
-	# TODO: Look into archive mode and other flags near bottom.
-
 	exec geth \
 		--verbosity="$VERBOSITY" \
 		--datadir="$GETH_DATA_DIR" \
 		--port 30311 \
 		--syncmode=full \
+		--gcmode=archive \
 		--http \
 		--http.corsdomain="*" \
 		--http.vhosts="*" \
@@ -108,8 +104,6 @@ elif [ "$GETH_NODE_TYPE" = "signer" ]; then
 		--authrpc.addr="0.0.0.0" \
 		--authrpc.port="8551" \
 		--authrpc.vhosts="*" \
-		--authrpc.jwtsecret=/jwt-secret.txt \
-		--gcmode=archive \
 		--metrics \
 		--metrics.addr=0.0.0.0 \
 		--metrics.port=6060 \
