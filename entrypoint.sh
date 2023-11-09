@@ -4,7 +4,7 @@ set -exu
 mkdir /db
 
 GENESIS_L1_PATH="/genesis.json"
-VERBOSITY=5
+VERBOSITY=3
 GETH_DATA_DIR=/db
 GETH_CHAINDATA_DIR="$GETH_DATA_DIR/geth/chaindata"
 GETH_KEYSTORE_DIR="$GETH_DATA_DIR/keystore"
@@ -49,12 +49,10 @@ if [ "$GETH_NODE_TYPE" = "bootnode" ]; then
 	# Generate boot.key
 	echo "$BOOT_KEY" > $GETH_DATA_DIR/boot.key
 
-	# TODO: understand networking 
-
 	exec geth \
+		--verbosity="$VERBOSITY" \
 		--datadir="$GETH_DATA_DIR" \
 		--port 30301 \
-		--verbosity="$VERBOSITY" \
 		--http \
 		--http.corsdomain="*" \
 		--http.vhosts="*" \
@@ -81,11 +79,10 @@ elif [ "$GETH_NODE_TYPE" = "signer" ]; then
 
 	# TODO: Look into archive mode and other flags near bottom.
 
-
 	exec geth \
+		--verbosity="$VERBOSITY" \
 		--datadir="$GETH_DATA_DIR" \
 		--port 30311 \
-		--verbosity="$VERBOSITY" \
 		--syncmode=full \
 		--http \
 		--http.corsdomain="*" \
@@ -97,6 +94,8 @@ elif [ "$GETH_NODE_TYPE" = "signer" ]; then
 		--networkid=$CHAIN_ID \
 		--unlock=$BLOCK_SIGNER_ADDRESS \
 		--password="$GETH_DATA_DIR"/password \
+		--mine \
+		--miner.etherbase=$BLOCK_SIGNER_ADDRESS \
 		--allow-insecure-unlock \
 		--nousb \
 		--netrestrict 172.13.0.0/24 \
