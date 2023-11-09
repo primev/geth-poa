@@ -1,7 +1,7 @@
 #!/bin/sh
 set -exu
 
-mkdir /db
+mkdir -p /db
 
 GENESIS_L1_PATH="/genesis.json"
 VERBOSITY=3

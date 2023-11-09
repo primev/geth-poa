@@ -10,6 +10,8 @@ services:
     networks:
       poa_net:
         ipv4_address: '172.13.0.100'
+    ports:
+      - 8545:8545
   node1:
     build: 
       context: .

@@ -20,4 +20,6 @@ COPY genesis.json /genesis.json
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+EXPOSE 8545
+
 ENTRYPOINT ["/entrypoint.sh"] 
