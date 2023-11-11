@@ -1,3 +1,6 @@
+# See https://hub.docker.com/r/shaspitz/geth-poa
+# Version: v0
+
 FROM golang:1.21-alpine AS builder
 
 RUN apk add --no-cache gcc musl-dev linux-headers git make

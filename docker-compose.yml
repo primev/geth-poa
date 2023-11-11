@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile 
+    image: shaspitz/geth-poa:v0
     environment:
       - GETH_NODE_TYPE=bootnode
       - BOOT_KEY=7b548c1c0fbe80ef1eb0aaec2edf26fd20fb0d758e94948cf6c5f2a486e735f6
@@ -18,6 +19,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    image: shaspitz/geth-poa:v0
     environment:
       - GETH_NODE_TYPE=signer
       - BLOCK_SIGNER_ADDRESS=0x26D7AA13257f7975AC07fA792138B84E4bfC6396
@@ -31,6 +33,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    image: shaspitz/geth-poa:v0
     environment:
       - GETH_NODE_TYPE=signer
       - BLOCK_SIGNER_ADDRESS=0xE2D050cbd6C5F825ac346DC338FCE66Cb96427C6
