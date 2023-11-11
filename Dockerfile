@@ -1,5 +1,5 @@
 # See https://hub.docker.com/r/shaspitz/geth-poa
-# Version: v0
+# Version: v1
 
 FROM golang:1.21-alpine AS builder
 
