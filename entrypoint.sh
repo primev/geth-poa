@@ -1,11 +1,9 @@
 #!/bin/sh
 set -exu
 
-mkdir -p /db
-
 GENESIS_L1_PATH="/genesis.json"
 VERBOSITY=3
-GETH_DATA_DIR=/db
+GETH_DATA_DIR=/data
 GETH_CHAINDATA_DIR="$GETH_DATA_DIR/geth/chaindata"
 GETH_KEYSTORE_DIR="$GETH_DATA_DIR/keystore"
 CHAIN_ID=$(cat "$GENESIS_L1_PATH" | jq -r .config.chainId)

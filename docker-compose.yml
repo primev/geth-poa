@@ -12,6 +12,8 @@ services:
         ipv4_address: '172.13.0.100'
     ports:
       - 8545:8545
+    volumes:
+      - geth-data-bootnode:/data
   node1:
     build: 
       context: .
@@ -23,6 +25,8 @@ services:
     networks:
       poa_net:
         ipv4_address: '172.13.0.2'
+    volumes:
+      - geth-data-node1:/data
   node2:
     build: 
       context: .
@@ -34,6 +38,8 @@ services:
     networks:
       poa_net:
         ipv4_address: '172.13.0.3'
+    volumes:
+      - geth-data-node2:/data
 
 networks:
   poa_net:
@@ -42,3 +48,8 @@ networks:
       driver: default
       config:
       - subnet: 172.13.0.0/16
+
+volumes:
+  geth-data-bootnode:
+  geth-data-node1:
+  geth-data-node2:
