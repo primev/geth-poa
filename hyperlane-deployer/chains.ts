@@ -11,7 +11,7 @@ export const chains: ChainMap<ChainMetadata> = {
     chainId: 17864,
     rpcUrls: [
       {
-        http: 'http://bootnode:8545',
+        http: 'http://172.13.0.100:8545',
       },
     ],
   },
