@@ -12,6 +12,9 @@ COPY chains.ts config/chains.ts
 # Overwrtie multisig_ism.ts
 COPY multisig_ism.ts config/multisig_ism.ts
 
+# Overwrite start_blocks.ts
+COPY start_blocks.ts config/start_blocks.ts
+
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
