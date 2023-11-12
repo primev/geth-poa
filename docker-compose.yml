@@ -43,6 +43,16 @@ services:
         ipv4_address: '172.13.0.3'
     volumes:
       - geth-data-node2:/data
+  hyperlane-deployer:
+    build:
+      context: ./hyperlane-deployer
+      dockerfile: Dockerfile
+    environment:
+      - CONTRACT_DEPLOYER_PRIVATE_KEY=${CONTRACT_DEPLOYER_PRIVATE_KEY}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.50'
+    # TODO: volume for storing whether contracts are deployed
 
 networks:
   poa_net:
