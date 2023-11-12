@@ -1,7 +1,7 @@
 #!/bin/sh
 set -exu
 
-sleep 30
+sleep 5
 
 yarn ts-node scripts/deploy-hyperlane.ts --local mevcommitsettlement \
   --remotes goerli \
