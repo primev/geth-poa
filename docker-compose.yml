@@ -53,6 +53,14 @@ services:
       poa_net:
         ipv4_address: '172.13.0.50'
     # TODO: volume for storing whether contracts are deployed
+  anvil-l1:
+    build:
+      context: ./anvil-l1
+      dockerfile: Dockerfile
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.75'
+    # TODO: expose port 
 
 networks:
   poa_net:

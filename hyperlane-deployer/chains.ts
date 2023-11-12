@@ -15,4 +15,15 @@ export const chains: ChainMap<ChainMetadata> = {
       },
     ],
   },
+  anvil: {
+    name: 'anvil',
+    protocol: ProtocolType.Ethereum,
+    // anvil default chain id
+    chainId: 31337,
+    rpcUrls: [
+      {
+        http: 'http://172.13.0.75:8545',
+      },
+    ],
+  },
 };
