@@ -12,6 +12,10 @@ cast send \
 
 # TODO: prob need to fund other accounts too
 
+yarn ts-node scripts/deploy-hyperlane.ts --local anvil \
+  --remotes goerli \
+  --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+
 yarn ts-node scripts/deploy-hyperlane.ts --local mevcommitsettlement \
   --remotes anvil \
   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
