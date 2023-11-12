@@ -1,6 +1,7 @@
 # geth-poa
 
 TODO: add container which stress tests network with txs
+TODO: merge branch with local anvil l1 -> useful for mev-commit docker testing 
 
 ## Key Summary
 
