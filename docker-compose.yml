@@ -47,12 +47,56 @@ services:
     build:
       context: ./hyperlane-deployer
       dockerfile: Dockerfile
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /deploy-artifacts/done || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 30
     environment:
       - CONTRACT_DEPLOYER_PRIVATE_KEY=${CONTRACT_DEPLOYER_PRIVATE_KEY}
     networks:
       poa_net:
         ipv4_address: '172.13.0.50'
-    # TODO: volume for storing whether contracts are deployed
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+  hyperlane-validator1:
+    build:
+      context: ./hyperlane-validator
+      dockerfile: Dockerfile
+    # TODO: evaluate why container needs to run as root
+    user: "0:0"
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
+    environment:
+      # Reuse geth node1 private key for validator
+      - VALIDATOR_PRIVATE_KEY=${NODE1_PRIVATE_KEY}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.75'
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-validator1-sigs:/sigs
+      - hyperlane-validator1-db:/val-db
+  hyperlane-validator2:
+    build:
+      context: ./hyperlane-validator
+      dockerfile: Dockerfile
+    # TODO: evaluate why container needs to run as root
+    user: "0:0"
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
+    environment:
+      # Reuse geth node2 private key for validator
+      - VALIDATOR_PRIVATE_KEY=${NODE2_PRIVATE_KEY} 
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.76'
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-validator2-sigs:/sigs
+      - hyperlane-validator2-db:/val-db
 
 networks:
   poa_net:
@@ -66,3 +110,8 @@ volumes:
   geth-data-bootnode:
   geth-data-node1:
   geth-data-node2:
+  hyperlane-deploy-artifacts:
+  hyperlane-validator1-sigs:
+  hyperlane-validator2-sigs:
+  hyperlane-validator1-db:
+  hyperlane-validator2-db:
