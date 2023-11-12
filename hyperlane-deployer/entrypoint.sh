@@ -4,7 +4,7 @@ set -exu
 sleep 30
 
 yarn ts-node scripts/deploy-hyperlane.ts --local mevcommitsettlement \
-  --remotes sepolia \
+  --remotes goerli \
   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
 
 # Infinite loop
