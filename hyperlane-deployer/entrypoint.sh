@@ -35,3 +35,8 @@ yarn ts-node scripts/test-warp-transfer.ts \
   --origin goerli --destination mevcommitsettlement --wei 1 \
   --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+
+yarn ts-node scripts/test-warp-transfer.ts \
+  --origin mevcommitsettlement --destination goerli --wei 1 \
+  --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
+  --key $CONTRACT_DEPLOYER_PRIVATE_KEY

@@ -63,39 +63,37 @@ services:
     build:
       context: ./hyperlane-validator
       dockerfile: Dockerfile
+    # Reuse geth private key for validator
+    command: ./validator --validator.key ${NODE1_PRIVATE_KEY} --chains.mevcommitsettlement.signer.key ${NODE1_PRIVATE_KEY} --checkpointSyncer.path /val1-sigs
     # TODO: evaluate why container needs to run as root
     user: "0:0"
     depends_on:
       hyperlane-deployer:
         condition: service_healthy
-    environment:
-      # Reuse geth node1 private key for validator
-      - VALIDATOR_PRIVATE_KEY=${NODE1_PRIVATE_KEY}
     networks:
       poa_net:
         ipv4_address: '172.13.0.75'
     volumes:
       - hyperlane-deploy-artifacts:/deploy-artifacts
-      - hyperlane-validator1-sigs:/sigs
+      - hyperlane-validator1-sigs:/val1-sigs
       - hyperlane-validator1-db:/val-db
   hyperlane-validator2:
     build:
       context: ./hyperlane-validator
       dockerfile: Dockerfile
+    # Reuse geth private key for validator
+    command: ./validator --validator.key ${NODE2_PRIVATE_KEY} --chains.mevcommitsettlement.signer.key ${NODE2_PRIVATE_KEY} --checkpointSyncer.path /val2-sigs
     # TODO: evaluate why container needs to run as root
     user: "0:0"
     depends_on:
       hyperlane-deployer:
         condition: service_healthy
-    environment:
-      # Reuse geth node2 private key for validator
-      - VALIDATOR_PRIVATE_KEY=${NODE2_PRIVATE_KEY} 
     networks:
       poa_net:
         ipv4_address: '172.13.0.76'
     volumes:
       - hyperlane-deploy-artifacts:/deploy-artifacts
-      - hyperlane-validator2-sigs:/sigs
+      - hyperlane-validator2-sigs:/val2-sigs
       - hyperlane-validator2-db:/val-db
   hyperlane-relayer:
     build:
@@ -112,8 +110,8 @@ services:
         ipv4_address: '172.13.0.77'
     volumes:
       - hyperlane-deploy-artifacts:/deploy-artifacts
-      - hyperlane-validator1-sigs:/validator1-sigs
-      - hyperlane-validator2-sigs:/validator2-sigs
+      - hyperlane-validator1-sigs:/val1-sigs
+      - hyperlane-validator2-sigs:/val2-sigs
       - hyperlane-relayer-db:/relayer-db
 
 networks:

@@ -13,8 +13,4 @@ ENV HYP_BASE_CHAINS_MEVCOMMITSETTLEMENT_CONNECTION_URL="http://172.13.0.100:8545
 ENV HYP_BASE_DB="/val-db"
 ENV HYP_BASE_CHECKPOINTSYNCER_TYPE="localStorage"
 ENV HYP_BASE_CHECKPOINTSYNCER_PATH="/sigs"
-
 # TODO: eval why keys specified as env vars did not work
-CMD ./validator \
-    --validator.key $VALIDATOR_PRIVATE_KEY \
-    --chains.mevcommitsettlement.signer.key $VALIDATOR_PRIVATE_KEY
