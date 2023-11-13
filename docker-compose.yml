@@ -48,7 +48,7 @@ services:
       context: ./hyperlane-deployer
       dockerfile: Dockerfile
     healthcheck:
-      test: ["CMD-SHELL", "test -f /deploy-artifacts/done || exit 1"]
+      test: ["CMD-SHELL", "test -f /go/hyperlane-deploy/artifacts/done || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 30
@@ -58,7 +58,7 @@ services:
       poa_net:
         ipv4_address: '172.13.0.50'
     volumes:
-      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-deploy-artifacts:/go/hyperlane-deploy/artifacts
   hyperlane-validator1:
     build:
       context: ./hyperlane-validator
