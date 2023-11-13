@@ -97,6 +97,24 @@ services:
       - hyperlane-deploy-artifacts:/deploy-artifacts
       - hyperlane-validator2-sigs:/sigs
       - hyperlane-validator2-db:/val-db
+  hyperlane-relayer:
+    build:
+      context: ./hyperlane-relayer
+      dockerfile: Dockerfile
+    user: "0:0"
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
+    environment:
+      - RELAYER_PRIVATE_KEY=${RELAYER_PRIVATE_KEY}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.77'
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-validator1-sigs:/validator1-sigs
+      - hyperlane-validator2-sigs:/validator2-sigs
+      - hyperlane-relayer-db:/relayer-db
 
 networks:
   poa_net:
@@ -115,3 +133,4 @@ volumes:
   hyperlane-validator2-sigs:
   hyperlane-validator1-db:
   hyperlane-validator2-db:
+  hyperlane-relayer-db:
