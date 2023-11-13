@@ -35,6 +35,3 @@ yarn ts-node scripts/test-warp-transfer.ts \
   --origin goerli --destination mevcommitsettlement --wei 1 \
   --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
-
-# Infinite loop
-while true; do sleep 30; done;
