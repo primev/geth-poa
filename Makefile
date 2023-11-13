@@ -1,7 +1,9 @@
 up:
+	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
 	docker compose up -d
 
 up-build:
+	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
 	docker compose up -d --build
 
 down:

@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile 
-    image: shaspitz/geth-poa:v0
+    image: shaspitz/geth-poa:v1
     environment:
       - GETH_NODE_TYPE=bootnode
       - BOOT_KEY=7b548c1c0fbe80ef1eb0aaec2edf26fd20fb0d758e94948cf6c5f2a486e735f6
@@ -19,11 +19,11 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    image: shaspitz/geth-poa:v0
+    image: shaspitz/geth-poa:v1
     environment:
       - GETH_NODE_TYPE=signer
-      - BLOCK_SIGNER_ADDRESS=0x26D7AA13257f7975AC07fA792138B84E4bfC6396
-      - BLOCK_SIGNER_PRIVATE_KEY=75bd18de9d0de30c451ebc91ce76188f728c60715618827361996ffcd46f9a48
+      - BLOCK_SIGNER_ADDRESS=0xd9cd8E5DE6d55f796D980B818D350C0746C25b97
+      - BLOCK_SIGNER_PRIVATE_KEY=${NODE1_PRIVATE_KEY}
     networks:
       poa_net:
         ipv4_address: '172.13.0.2'
@@ -33,16 +33,88 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    image: shaspitz/geth-poa:v0
+    image: shaspitz/geth-poa:v1
     environment:
       - GETH_NODE_TYPE=signer
-      - BLOCK_SIGNER_ADDRESS=0xE2D050cbd6C5F825ac346DC338FCE66Cb96427C6
-      - BLOCK_SIGNER_PRIVATE_KEY=9b829557581217ecaddf42dfb1656bda95a2af972b378eaee0e9ba784ba899c1
+      - BLOCK_SIGNER_ADDRESS=0x788EBABe5c3dD422Ef92Ca6714A69e2eabcE1Ee4
+      - BLOCK_SIGNER_PRIVATE_KEY=${NODE2_PRIVATE_KEY}
     networks:
       poa_net:
         ipv4_address: '172.13.0.3'
     volumes:
       - geth-data-node2:/data
+  hyperlane-deployer:
+    build:
+      context: ./hyperlane-deployer
+      dockerfile: Dockerfile
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /go/hyperlane-deploy/artifacts/done || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 30
+    environment:
+      - CONTRACT_DEPLOYER_PRIVATE_KEY=${CONTRACT_DEPLOYER_PRIVATE_KEY}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.50'
+    volumes:
+      - hyperlane-deploy-artifacts:/go/hyperlane-deploy/artifacts
+  hyperlane-validator1:
+    build:
+      context: ./hyperlane-validator
+      dockerfile: Dockerfile
+    # TODO: evaluate why container needs to run as root
+    user: "0:0"
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
+    environment:
+      # Reuse geth node1 private key for validator
+      - VALIDATOR_PRIVATE_KEY=${NODE1_PRIVATE_KEY}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.75'
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-validator1-sigs:/sigs
+      - hyperlane-validator1-db:/val-db
+  hyperlane-validator2:
+    build:
+      context: ./hyperlane-validator
+      dockerfile: Dockerfile
+    # TODO: evaluate why container needs to run as root
+    user: "0:0"
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
+    environment:
+      # Reuse geth node2 private key for validator
+      - VALIDATOR_PRIVATE_KEY=${NODE2_PRIVATE_KEY} 
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.76'
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-validator2-sigs:/sigs
+      - hyperlane-validator2-db:/val-db
+  hyperlane-relayer:
+    build:
+      context: ./hyperlane-relayer
+      dockerfile: Dockerfile
+    user: "0:0"
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
+    environment:
+      - RELAYER_PRIVATE_KEY=${RELAYER_PRIVATE_KEY}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.77'
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
+      - hyperlane-validator1-sigs:/validator1-sigs
+      - hyperlane-validator2-sigs:/validator2-sigs
+      - hyperlane-relayer-db:/relayer-db
 
 networks:
   poa_net:
@@ -56,3 +128,9 @@ volumes:
   geth-data-bootnode:
   geth-data-node1:
   geth-data-node2:
+  hyperlane-deploy-artifacts:
+  hyperlane-validator1-sigs:
+  hyperlane-validator2-sigs:
+  hyperlane-validator1-db:
+  hyperlane-validator2-db:
+  hyperlane-relayer-db:
