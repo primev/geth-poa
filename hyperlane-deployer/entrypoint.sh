@@ -19,5 +19,13 @@ else
   touch /deploy-artifacts/done
 fi
 
+# Shim to run test script, move file to where their script expects it
+mkdir -p ./artifacts
+cp /deploy-artifacts/addresses.json ./artifacts/addresses.json
+
+DEBUG=hyperlane* yarn ts-node scripts/test-messages.ts \
+  --chains goerli mevcommitsettlement \
+  --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+
 # Infinite loop
 while true; do sleep 30; done;
