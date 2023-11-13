@@ -1,7 +1,12 @@
 # geth-poa
 
-TODO: add container which stress tests network with txs
-TODO: merge branch with local anvil l1 -> useful for mev-commit docker testing 
+Tool for spinning up a POA ethereum sidechain bridged to goerli via [hyperlane](https://www.hyperlane.xyz/) token warp route.
+
+## TODOs
+
+* add container which stress tests network with txs
+* Update to hyperlane v3 once released
+* merge branch with local anvil l1 once hyperlane v3 is released -> useful for mev-commit docker testing 
 
 ## Key Summary
 
