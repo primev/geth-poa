@@ -13,6 +13,7 @@ services:
         ipv4_address: '172.13.0.100'
     ports:
       - 8545:8545
+      - 8546:8546
     volumes:
       - geth-data-bootnode:/data
   node1:
