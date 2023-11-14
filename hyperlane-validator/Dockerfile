@@ -1,5 +1,5 @@
 # Image can be built for arm64 with https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/rust/build.sh
-FROM shaspitz/hyperlane-validator:v0-mac
+FROM gcr.io/abacus-labs-dev/hyperlane-agent:8127fa5-20230823-161309
 
 # Validator config, see: 
 # - https://docs.hyperlane.xyz/docs/operators/validators/setup
