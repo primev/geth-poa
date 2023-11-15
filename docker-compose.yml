@@ -61,6 +61,9 @@ services:
     build:
       context: ./hyperlane-validator
       dockerfile: Dockerfile
+      args:
+        # Image can be built for arm64 with https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/rust/build.sh
+        - AGENT_BASE_IMAGE=${AGENT_BASE_IMAGE}
     # Reuse geth private key for validator
     command: ./validator --validator.key ${NODE1_PRIVATE_KEY} --chains.mevcommitsettlement.signer.key ${NODE1_PRIVATE_KEY} --checkpointSyncer.path /val1-sigs
     # TODO: evaluate why container needs to run as root
@@ -79,6 +82,8 @@ services:
     build:
       context: ./hyperlane-validator
       dockerfile: Dockerfile
+      args:
+        - AGENT_BASE_IMAGE=${AGENT_BASE_IMAGE}
     # Reuse geth private key for validator
     command: ./validator --validator.key ${NODE2_PRIVATE_KEY} --chains.mevcommitsettlement.signer.key ${NODE2_PRIVATE_KEY} --checkpointSyncer.path /val2-sigs
     # TODO: evaluate why container needs to run as root
@@ -97,6 +102,8 @@ services:
     build:
       context: ./hyperlane-relayer
       dockerfile: Dockerfile
+      args:
+        - AGENT_BASE_IMAGE=${AGENT_BASE_IMAGE}
     user: "0:0"
     depends_on:
       hyperlane-deployer:
@@ -111,6 +118,22 @@ services:
       - hyperlane-validator1-sigs:/val1-sigs
       - hyperlane-validator2-sigs:/val2-sigs
       - hyperlane-relayer-db:/relayer-db
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+    environment:
+      - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+      - L2_NODE_URL=${L2_NODE_URL}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.90'
+    ports:
+      - 80:3000
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
 
 networks:
   poa_net:

@@ -1,6 +1,5 @@
-# Image can be built for arm64 with https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/rust/build.sh
-# TODO: Rename to hyperlane-agent
-FROM shaspitz/hyperlane-validator:v0-mac
+ARG AGENT_BASE_IMAGE
+FROM ${AGENT_BASE_IMAGE}
 
 # Relayer config, see: 
 # - https://docs.hyperlane.xyz/docs/operators/relayers/setup
