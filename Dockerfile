@@ -1,15 +1,12 @@
-# See https://hub.docker.com/r/shaspitz/geth-poa
-# Version: v1
-
 FROM golang:1.21-alpine AS builder
 
 RUN apk add --no-cache gcc musl-dev linux-headers git make
 
-RUN git clone https://github.com/shaspitz/go-ethereum.git /go-ethereum
+RUN git clone https://github.com/primevprotocol/go-ethereum.git /go-ethereum
 WORKDIR /go-ethereum
 
-# commit: lets try hardcoding delay 
-RUN git checkout 9bb1a7f0034002e79c4a91406ea3828ad3e4627f
+# commit: https://github.com/primevprotocol/go-ethereum/commit/f481d9ca0fb8aadcc31dec32389a301c24569a1d
+RUN git checkout f481d9ca0fb8aadcc31dec32389a301c24569a1d
 RUN make geth
 
 FROM alpine:latest
