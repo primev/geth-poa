@@ -17,7 +17,8 @@ up-dev-build:
 down:
 	docker compose down
 
-clean-docker:
+clean-dbs:
+	@read -p "WARNING: This command will wipe all persistent disk data relevant to the containers. Press enter to continue or Ctrl+C to cancel." _ 
 	-docker compose down --rmi all --volumes
 	-docker compose rm -fv
 	docker image prune -f
