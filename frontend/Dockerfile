@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache git yarn
+RUN apk add --no-cache git yarn jq
 
 RUN git clone https://github.com/primevprotocol/hyperlane-ui.git
 WORKDIR /hyperlane-ui
@@ -12,4 +12,7 @@ ARG NEXT_PUBLIC_WALLET_CONNECT_ID
 
 RUN yarn build
 
-CMD [ "yarn", "dev" ]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]

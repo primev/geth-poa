@@ -126,11 +126,14 @@ services:
         - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
     environment:
       - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+      - L2_NODE_URL=${L2_NODE_URL}
     networks:
       poa_net:
         ipv4_address: '172.13.0.90'
     ports:
       - 80:3000
+    volumes:
+      - hyperlane-deploy-artifacts:/deploy-artifacts
 
 networks:
   poa_net:
