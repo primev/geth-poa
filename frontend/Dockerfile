@@ -4,7 +4,7 @@ RUN apk add --no-cache git yarn
 
 RUN git clone https://github.com/primevprotocol/hyperlane-ui.git
 WORKDIR /hyperlane-ui
-RUN git checkout 64d6f69634077b02acc33777a099da8de8a349a0
+RUN git checkout cbc3a97bedcc1503ec2aa61b9bca0fe0bb0bc64d
 
 RUN yarn
 
