@@ -111,6 +111,19 @@ services:
       - hyperlane-validator1-sigs:/val1-sigs
       - hyperlane-validator2-sigs:/val2-sigs
       - hyperlane-relayer-db:/relayer-db
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+    environment:
+      - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+    networks:
+      poa_net:
+        ipv4_address: '172.13.0.90'
+    ports:
+      - 80:3000
 
 networks:
   poa_net:
