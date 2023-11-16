@@ -15,7 +15,7 @@ up-dev-build:
 	AGENT_BASE_IMAGE=shaspitz/hyperlane-validator:v0-mac L2_NODE_URL=http://localhost:8545 docker compose up -d --build
 
 down:
-	docker compose down
+	AGENT_BASE_IMAGE=nil L2_NODE_URL=nil docker compose down
 
 clean-dbs:
 	@read -p "WARNING: This command will wipe all persistent disk data relevant to the containers. Press enter to continue or Ctrl+C to cancel." _ 
