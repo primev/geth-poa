@@ -1,0 +1,3 @@
+[submodule "util/swap-contract/swap-contract/lib/forge-std"]
+	path = util/swap-contract/swap-contract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
