@@ -6,7 +6,7 @@ WORKDIR /
 RUN git clone https://github.com/primevprotocol/hyperlane-monorepo.git 
 WORKDIR /hyperlane-monorepo
 # RUN git checkout v3-audit-remediations
-RUN git checkout 69850642365251e16b9f23b87d6caf187036b3ee
+RUN git checkout ca301c80861701e17b13b9a06454795b317696b2
 # TODO: checkout stable version, seemed like v3-audit-remediations changed build process
 RUN yarn install
 RUN yarn build
