@@ -52,7 +52,7 @@ services:
       context: ./hyperlane-deployer
       dockerfile: Dockerfile
     healthcheck:
-      test: ["CMD-SHELL", "test -f /hyperlane-monorepo/artifacts/done || exit 1"]
+      test: ["CMD-SHELL", "test -f /hyperlane-monorepo/artifacts/done-warp-route || exit 1"]
       interval: 5s
       retries: 100
     environment:

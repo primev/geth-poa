@@ -16,7 +16,7 @@ All relevant accounts are funded on sidechain genesis, you may need to fund thes
 
 ## Contract deployer
 
-Address:    `0xdCfaD16AF20410D24757d0ae9366e122B55Af405`
+Address:    `0x02Da0B5C80b13b1ec96a844A01A11396E8E27593`
 
 ## Validator Accounts (also POA signers)
 
