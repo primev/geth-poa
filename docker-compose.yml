@@ -52,17 +52,16 @@ services:
       context: ./hyperlane-deployer
       dockerfile: Dockerfile
     healthcheck:
-      test: ["CMD-SHELL", "test -f /hyperlane-deploy/artifacts/done || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 30
+      test: ["CMD-SHELL", "test -f /hyperlane-monorepo/artifacts/done || exit 1"]
+      interval: 5s
+      retries: 100
     environment:
       - CONTRACT_DEPLOYER_PRIVATE_KEY=${CONTRACT_DEPLOYER_PRIVATE_KEY}
     networks:
       poa_net:
         ipv4_address: '172.13.0.50'
     volumes:
-      - hyperlane-deploy-artifacts:/hyperlane-deploy/artifacts
+      - hyperlane-deploy-artifacts:/hyperlane-monorepo/artifacts
     profiles:
       - bridge
   hyperlane-validator1:
@@ -138,6 +137,9 @@ services:
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
     environment:
       - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
       - L2_NODE_URL=${L2_NODE_URL}

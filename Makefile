@@ -8,15 +8,15 @@ up-prod-build:
 
 up-dev:
 	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
-	AGENT_BASE_IMAGE=shaspitz/hyperlane-validator:v0-mac L2_NODE_URL=http://localhost:8545 docker compose --profile settlement --profile bridge up -d
+	AGENT_BASE_IMAGE=shaspitz/hyperlane-agent-mac:6985064 L2_NODE_URL=http://localhost:8545 docker compose --profile settlement --profile bridge up -d
 
 up-dev-build:
 	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
-	AGENT_BASE_IMAGE=shaspitz/hyperlane-validator:v0-mac L2_NODE_URL=http://localhost:8545 docker compose --profile settlement --profile bridge up -d --build
+	AGENT_BASE_IMAGE=shaspitz/hyperlane-agent-mac:6985064 L2_NODE_URL=http://localhost:8545 docker compose --profile settlement --profile bridge up -d --build
 
 up-dev-settlement:
 	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
-	AGENT_BASE_IMAGE=shaspitz/hyperlane-validator:v0-mac L2_NODE_URL=http://localhost:8545 docker compose --profile settlement up -d --build
+	AGENT_BASE_IMAGE=shaspitz/hyperlane-agent-mac:6985064 L2_NODE_URL=http://localhost:8545 docker compose --profile settlement up -d --build
 
 down:
 	AGENT_BASE_IMAGE=nil L2_NODE_URL=nil docker compose --profile settlement --profile bridge down

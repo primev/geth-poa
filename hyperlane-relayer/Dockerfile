@@ -5,9 +5,9 @@ FROM ${AGENT_BASE_IMAGE}
 # - https://docs.hyperlane.xyz/docs/operators/relayers/setup
 # - https://docs.hyperlane.xyz/docs/operators/agent-configuration#config-layers
 
-ENV CONFIG_FILES="/deploy-artifacts/agent_config.json"
+ENV CONFIG_FILES="/deploy-artifacts/agent-config.json"
 
-# TODO: need to specify paths to signatures?
+# TODO: enforce minimum gas payment in prod
 
 CMD ./relayer \
     --relayChains mevcommitsettlement,goerli \
@@ -15,4 +15,5 @@ CMD ./relayer \
     --chains.goerli.connection.url "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" \
     --db /relayer-db \
     --defaultSigner.key $RELAYER_PRIVATE_KEY \
-    --allowLocalCheckpointSyncers true
+    --allowLocalCheckpointSyncers true \
+    --gasPaymentEnforcement '[{"type": "none"}]'

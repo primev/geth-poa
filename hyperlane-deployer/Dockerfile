@@ -1,23 +1,22 @@
-FROM alpine:latest 
+FROM alpine:latest
 
-RUN apk add --no-cache git yarn
+RUN apk update && apk add --no-cache git yarn expect
 
-RUN git clone https://github.com/hyperlane-xyz/hyperlane-deploy.git
-WORKDIR hyperlane-deploy
+WORKDIR /
+RUN git clone https://github.com/primevprotocol/hyperlane-monorepo.git 
+WORKDIR /hyperlane-monorepo
+# RUN git checkout v3-audit-remediations
+RUN git checkout 69850642365251e16b9f23b87d6caf187036b3ee
+# TODO: checkout stable version, seemed like v3-audit-remediations changed build process
 RUN yarn install
 RUN yarn build
 
-# Overwrite chains.ts 
-COPY chains.ts config/chains.ts
+RUN ln -s /hyperlane-monorepo/typescript/cli/dist/cli.js /usr/local/bin/hyperlane
+RUN chmod +x /usr/local/bin/hyperlane
 
-# Overwrtie multisig_ism.ts
-COPY multisig_ism.ts config/multisig_ism.ts
-
-# Overwrite start_blocks.ts
-COPY start_blocks.ts config/start_blocks.ts
-
-# Overwrite warp_tokens.ts
-COPY warp_tokens.ts config/warp_tokens.ts
+COPY chain-config.yml /chain-config.yml
+COPY multisig-ism.yml /multisig-ism.yml
+COPY warp-tokens.yml /warp-tokens.yml
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
