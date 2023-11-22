@@ -7,6 +7,8 @@ FROM ${AGENT_BASE_IMAGE}
 
 ENV CONFIG_FILES="/deploy-artifacts/agent-config.json"
 
+# TODO: enforce minimum gas payment in prod
+
 CMD ./relayer \
     --relayChains mevcommitsettlement,goerli \
     --chains.mevcommitsettlement.connection.url "http://172.13.0.100:8545" \
@@ -14,4 +16,4 @@ CMD ./relayer \
     --db /relayer-db \
     --defaultSigner.key $RELAYER_PRIVATE_KEY \
     --allowLocalCheckpointSyncers true \
-    --gasPaymentEnforcement '[{"type": "none", "matchingList": [{"senderAddress": "0xdCfaD16AF20410D24757d0ae9366e122B55Af405"}]}, {"type": "minimum", "payment": 100000}]'
+    --gasPaymentEnforcement '[{"type": "none"}]'
