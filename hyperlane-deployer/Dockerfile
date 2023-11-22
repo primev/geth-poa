@@ -1,11 +1,16 @@
-FROM alpine:latest 
+FROM alpine:latest
 
-RUN apk add --no-cache git yarn
+RUN apk update && apk add --no-cache git yarn
 
-RUN git clone https://github.com/hyperlane-xyz/hyperlane-deploy.git
-WORKDIR hyperlane-deploy
+WORKDIR /
+RUN git clone https://github.com/hyperlane-xyz/hyperlane-monorepo.git
+WORKDIR /hyperlane-monorepo
+RUN git checkout v1.5.8
 RUN yarn install
 RUN yarn build
+
+RUN ln -s /hyperlane-monorepo/typescript/cli/dist/cli.js /usr/local/bin/hyperlane
+RUN chmod +x /usr/local/bin/hyperlane
 
 # Overwrite chains.ts 
 COPY chains.ts config/chains.ts

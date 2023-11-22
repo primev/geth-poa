@@ -3,6 +3,10 @@ set -exu
 
 sleep 5
 
+hyperlane --help
+
+exit 0
+
 if test -f artifacts/done; then
   echo "Deploy artifacts already exist. Skipping deployment."
 else
