@@ -1,10 +1,12 @@
+# Prod targets reg the amd agent image for this commit: 
+# https://github.com/hyperlane-xyz/hyperlane-monorepo/commit/69850642365251e16b9f23b87d6caf187036b3ee
 up-prod:
 	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
-	AGENT_BASE_IMAGE=gcr.io/abacus-labs-dev/hyperlane-agent:8127fa5-20230823-161309 L2_NODE_URL=http://34.215.163.180:8545 docker compose --profile settlement --profile bridge up -d	
+	AGENT_BASE_IMAGE=gcr.io/abacus-labs-dev/hyperlane-agent@sha256:854f92966eac6b49e5132e152cc58168ecdddc76c2d390e657b81bdaf1396af0 L2_NODE_URL=http://34.215.163.180:8545 docker compose --profile settlement --profile bridge up -d	
 
 up-prod-build:
 	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
-	AGENT_BASE_IMAGE=gcr.io/abacus-labs-dev/hyperlane-agent:8127fa5-20230823-161309 L2_NODE_URL=http://34.215.163.180:8545 docker compose --profile settlement --profile bridge up -d --build
+	AGENT_BASE_IMAGE=gcr.io/abacus-labs-dev/hyperlane-agent@sha256:854f92966eac6b49e5132e152cc58168ecdddc76c2d390e657b81bdaf1396af0 L2_NODE_URL=http://34.215.163.180:8545 docker compose --profile settlement --profile bridge up -d --build
 
 up-dev:
 	@if [ ! -f .env ]; then echo "Error: .env file not found. Please populate the .env file before running this command."; exit 1; fi
