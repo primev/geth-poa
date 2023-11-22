@@ -29,6 +29,15 @@ else
     eof
   }
 EOF
+
+  # Standardize artifact names
+  for file in /hyperlane-monorepo/artifacts/agent-config-*.json; do
+    mv "$file" "/hyperlane-monorepo/artifacts/agent-config.json"
+  done
+  for file in /hyperlane-monorepo/artifacts/core-deployment-*.json; do
+    mv "$file" "/hyperlane-monorepo/artifacts/core-deployment.json"
+  done
+
   # Signal done
   touch /hyperlane-monorepo/artifacts/done
 fi

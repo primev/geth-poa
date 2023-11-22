@@ -5,9 +5,7 @@ FROM ${AGENT_BASE_IMAGE}
 # - https://docs.hyperlane.xyz/docs/operators/relayers/setup
 # - https://docs.hyperlane.xyz/docs/operators/agent-configuration#config-layers
 
-ENV CONFIG_FILES="/deploy-artifacts/agent_config.json"
-
-# TODO: need to specify paths to signatures?
+ENV CONFIG_FILES="/deploy-artifacts/agent-config.json"
 
 CMD ./relayer \
     --relayChains mevcommitsettlement,goerli \
