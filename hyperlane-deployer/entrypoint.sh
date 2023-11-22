@@ -3,21 +3,39 @@ set -exu
 
 sleep 5
 
-hyperlane --help
-
-exit 0
-
-if test -f artifacts/done; then
+if test -f /hyperlane-monorepo/artifacts/done; then
   echo "Deploy artifacts already exist. Skipping deployment."
 else
-  echo "Deploy artifacts do not exist. Deploying."
-  yarn ts-node scripts/deploy-hyperlane.ts --local mevcommitsettlement \
-    --remotes goerli \
-    --key $CONTRACT_DEPLOYER_PRIVATE_KEY
 
-  # Signal done 
-  touch artifacts/done
+  # Define the expect script inline
+  /usr/bin/expect <<EOF
+  set timeout -1
+  spawn hyperlane deploy core \
+    --yes \
+    --targets goerli,mevcommitsettlement \
+    --chains /chain-config.yml \
+    --ism /multisig-ism.yml \
+    --out "/hyperlane-monorepo/artifacts" \
+    --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+  expect {
+    "? Do you want use some existing contract addresses? (Y/n)" {
+      send -- "n\r"
+      exp_continue
+    }
+    "*low balance on*" { 
+      send -- "y\r"
+      exp_continue
+    }
+    eof
+  }
+EOF
+  # Signal done
+  touch /hyperlane-monorepo/artifacts/done
 fi
+
+while true; do
+  sleep 5
+done
 
 # DEBUG=hyperlane* yarn ts-node scripts/test-messages.ts \
 #   --chains goerli mevcommitsettlement \
