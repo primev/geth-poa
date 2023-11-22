@@ -3,9 +3,10 @@ FROM alpine:latest
 RUN apk update && apk add --no-cache git yarn expect
 
 WORKDIR /
-RUN git clone https://github.com/hyperlane-xyz/hyperlane-monorepo.git
+RUN git clone https://github.com/primevprotocol/hyperlane-monorepo.git 
 WORKDIR /hyperlane-monorepo
 # RUN git checkout v3-audit-remediations
+RUN git checkout 69850642365251e16b9f23b87d6caf187036b3ee
 # TODO: checkout stable version, seemed like v3-audit-remediations changed build process
 RUN yarn install
 RUN yarn build
