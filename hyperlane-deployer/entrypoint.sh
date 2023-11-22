@@ -1,7 +1,7 @@
 #!/bin/sh
 set -exu
 
-sleep 5
+sleep 10
 
 if test -f /hyperlane-monorepo/artifacts/done; then
   echo "Deploy artifacts already exist. Skipping deployment."
@@ -33,9 +33,9 @@ EOF
   touch /hyperlane-monorepo/artifacts/done
 fi
 
-while true; do
-  sleep 5
-done
+# while true; do
+#   sleep 5
+# done
 
 # DEBUG=hyperlane* yarn ts-node scripts/test-messages.ts \
 #   --chains goerli mevcommitsettlement \
@@ -43,22 +43,22 @@ done
 
 # TODO: may need to specify owner and other addrs
 
-if test -f artifacts/done-warp-route; then
-  echo "Warp route already deployed. Skipping."
-else
-  echo "Deploying warp route."
-  DEBUG=hyperlane* yarn ts-node scripts/deploy-warp-routes.ts \
-    --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+# if test -f artifacts/done-warp-route; then
+#   echo "Warp route already deployed. Skipping."
+# else
+#   echo "Deploying warp route."
+#   DEBUG=hyperlane* yarn ts-node scripts/deploy-warp-routes.ts \
+#     --key $CONTRACT_DEPLOYER_PRIVATE_KEY
 
-  touch artifacts/done-warp-route
-fi
+#   touch artifacts/done-warp-route
+# fi
 
-yarn ts-node scripts/test-warp-transfer.ts \
-  --origin goerli --destination mevcommitsettlement --wei 1 \
-  --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
-  --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+# yarn ts-node scripts/test-warp-transfer.ts \
+#   --origin goerli --destination mevcommitsettlement --wei 1 \
+#   --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
+#   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
 
-yarn ts-node scripts/test-warp-transfer.ts \
-  --origin mevcommitsettlement --destination goerli --wei 1 \
-  --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
-  --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+# yarn ts-node scripts/test-warp-transfer.ts \
+#   --origin mevcommitsettlement --destination goerli --wei 1 \
+#   --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
+#   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
