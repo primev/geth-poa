@@ -13,4 +13,5 @@ CMD ./relayer \
     --chains.goerli.connection.url "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161" \
     --db /relayer-db \
     --defaultSigner.key $RELAYER_PRIVATE_KEY \
-    --allowLocalCheckpointSyncers true
+    --allowLocalCheckpointSyncers true \
+    --gasPaymentEnforcement '[{"type": "none", "matchingList": [{"senderAddress": "0xdCfaD16AF20410D24757d0ae9366e122B55Af405"}]}, {"type": "minimum", "payment": 100000}]'

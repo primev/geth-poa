@@ -42,15 +42,12 @@ EOF
   touch /hyperlane-monorepo/artifacts/done
 fi
 
-# while true; do
-#   sleep 5
-# done
-
-# DEBUG=hyperlane* yarn ts-node scripts/test-messages.ts \
-#   --chains goerli mevcommitsettlement \
-#   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
-
-# TODO: may need to specify owner and other addrs
+hyperlane send message \
+   --origin mevcommitsettlement \
+   --destination goerli \
+   --chains /chain-config.yml \
+   --core /hyperlane-monorepo/artifacts/core-deployment.json \
+   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
 
 # if test -f artifacts/done-warp-route; then
 #   echo "Warp route already deployed. Skipping."
