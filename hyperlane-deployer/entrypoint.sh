@@ -42,22 +42,34 @@ EOF
   touch /hyperlane-monorepo/artifacts/done
 fi
 
-hyperlane send message \
-   --origin mevcommitsettlement \
-   --destination goerli \
-   --chains /chain-config.yml \
-   --core /hyperlane-monorepo/artifacts/core-deployment.json \
-   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+# hyperlane send message \
+#    --origin mevcommitsettlement \
+#    --destination goerli \
+#    --chains /chain-config.yml \
+#    --core /hyperlane-monorepo/artifacts/core-deployment.json \
+#    --key $CONTRACT_DEPLOYER_PRIVATE_KEY
 
-# if test -f artifacts/done-warp-route; then
-#   echo "Warp route already deployed. Skipping."
-# else
-#   echo "Deploying warp route."
-#   DEBUG=hyperlane* yarn ts-node scripts/deploy-warp-routes.ts \
-#     --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+if test -f artifacts/done-warp-route; then
+  echo "Warp route already deployed. Skipping."
+else
+  echo "Deploying warp route."
+  hyperlane deploy warp \
+    --yes \
+    --key $CONTRACT_DEPLOYER_PRIVATE_KEY \
+    --chains /chain-config.yml \
+    --config /warp-tokens.yml \
+    --core /hyperlane-monorepo/artifacts/core-deployment.json
 
-#   touch artifacts/done-warp-route
-# fi
+  # Standardize artifact names
+  for file in /hyperlane-monorepo/artifacts/warp-deployment-*.json; do
+    mv "$file" "/hyperlane-monorepo/artifacts/warp-deployment.json"
+  done
+  for file in /hyperlane-monorepo/artifacts/warp-ui-token-config-*.json; do
+    mv "$file" "/hyperlane-monorepo/artifacts/warp-ui-token-config.json"
+  done
+  
+  touch artifacts/done-warp-route
+fi
 
 # yarn ts-node scripts/test-warp-transfer.ts \
 #   --origin goerli --destination mevcommitsettlement --wei 1 \

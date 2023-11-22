@@ -137,6 +137,9 @@ services:
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
+    depends_on:
+      hyperlane-deployer:
+        condition: service_healthy
     environment:
       - NEXT_PUBLIC_WALLET_CONNECT_ID=${NEXT_PUBLIC_WALLET_CONNECT_ID}
       - L2_NODE_URL=${L2_NODE_URL}

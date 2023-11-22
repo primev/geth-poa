@@ -16,6 +16,7 @@ RUN chmod +x /usr/local/bin/hyperlane
 
 COPY chain-config.yml /chain-config.yml
 COPY multisig-ism.yml /multisig-ism.yml
+COPY warp-tokens.yml /warp-tokens.yml
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
