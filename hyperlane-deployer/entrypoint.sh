@@ -1,6 +1,7 @@
 #!/bin/sh
 set -exu
 
+# Sleep to ensure chain is up
 sleep 10
 
 if test -f /hyperlane-monorepo/artifacts/done; then
@@ -42,13 +43,6 @@ EOF
   touch /hyperlane-monorepo/artifacts/done
 fi
 
-# hyperlane send message \
-#    --origin mevcommitsettlement \
-#    --destination goerli \
-#    --chains /chain-config.yml \
-#    --core /hyperlane-monorepo/artifacts/core-deployment.json \
-#    --key $CONTRACT_DEPLOYER_PRIVATE_KEY
-
 if test -f artifacts/done-warp-route; then
   echo "Warp route already deployed. Skipping."
 else
@@ -71,12 +65,5 @@ else
   touch artifacts/done-warp-route
 fi
 
-# yarn ts-node scripts/test-warp-transfer.ts \
-#   --origin goerli --destination mevcommitsettlement --wei 1 \
-#   --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
-#   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
-
-# yarn ts-node scripts/test-warp-transfer.ts \
-#   --origin mevcommitsettlement --destination goerli --wei 1 \
-#   --recipient 0xdCfaD16AF20410D24757d0ae9366e122B55Af405 \
-#   --key $CONTRACT_DEPLOYER_PRIVATE_KEY
+# Sleep to allow deployer health check (polled every 5sec) to pass
+sleep 10
