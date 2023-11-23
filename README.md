@@ -16,7 +16,11 @@ All relevant accounts are funded on sidechain genesis, you may need to fund thes
 
 ## Contract deployer
 
-Address:    `0x02Da0B5C80b13b1ec96a844A01A11396E8E27593`
+Address:    `0xBe3dEF3973584FdcC1326634aF188f0d9772D57D`
+
+Note if the relayer is emitting errors related to unexpected contract routing, try using a new deployer key pair. It's likely that the current bridge contract deployments are clashing with previous deployments.   
+
+You'd need to replace `Address` above, the allocs field of `genesis.json`, and the `CONTRACT_DEPLOYER_PRIVATE_KEY` in `.env`.
 
 ## Validator Accounts (also POA signers)
 
