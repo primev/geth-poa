@@ -13,7 +13,7 @@ else
   set timeout -1
   spawn hyperlane deploy core \
     --yes \
-    --targets goerli,mevcommitsettlement \
+    --targets sepolia,mevcommitsettlement \
     --chains /chain-config.yml \
     --ism /multisig-ism.yml \
     --out "/hyperlane-monorepo/artifacts" \

@@ -1,5 +1,5 @@
 base:
-  chainName: goerli
+  chainName: sepolia
   type: native
 synthetics:
   - chainName: mevcommitsettlement
