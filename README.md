@@ -5,8 +5,11 @@ Tool for spinning up a POA ethereum sidechain bridged to goerli via [hyperlane](
 ## TODOs
 
 * add container which stress tests network with txs
-* Update to hyperlane v3 once released
 * merge branch with local anvil l1 once hyperlane v3 is released -> useful for mev-commit docker testing 
+
+## Metrics
+
+Metrics recorded by bootnode are exposed to host at http://127.0.0.1:6060/debug/metrics
 
 ## Key Summary
 
