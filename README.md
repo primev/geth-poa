@@ -1,4 +1,4 @@
-# geth-poa
+# geth-poa [DEPRECATED - USE REPO IN MEV COMMIT]
 
 Tool for spinning up a POA ethereum sidechain bridged to goerli via [hyperlane](https://www.hyperlane.xyz/) token warp route.
 
