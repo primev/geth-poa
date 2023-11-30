@@ -39,3 +39,15 @@ Address:     `0x788EBABe5c3dD422Ef92Ca6714A69e2eabcE1Ee4`
 
 Address:     `0x0DCaa27B9E4Db92F820189345792f8eC5Ef148F6`
 
+
+## Local Deployment
+To run this in a local setup, consdier the following setup:
+1. Set the .evn variable with specific configurations, an example is given below. You can set the values by copying the .env.example file and populating the values.
+```bash
+DEPLOYMENT_CONTEXT=primev-settlement
+L1_BLOCK_TIME=12
+L2_BLOCK_TIME=1
+GOVERNANCE_TOKEN_SYMBOL=TBD
+GOVERNANCE_TOKEN_NAME=TBD-name
+```
+2. Run `make up-dev-settlement` to exclusively bring up the settlement layer, or `make up-dev` to bring up the entire suite of tools for the settlment chain, including a bridge.
